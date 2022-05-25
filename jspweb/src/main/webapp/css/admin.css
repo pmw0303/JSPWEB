@@ -1,0 +1,36 @@
+@charset "UTF-8";
+
+*{
+	padding: 0px; margin: 0px;
+}
+li{
+	list-style: none;
+}
+
+#sidebar{
+	background-color: #eeeeee;
+	width: 200px;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: -200px;
+}
+
+#sidebar ul{
+	position: absolute;
+	top: 30px;
+	left: 50px;
+	
+}
+#sidebar li{
+	margin: 30px 0;
+	text-decoration: none;
+}
+#sidebar span{
+	background: #eeeeee;
+	position: absolute;
+	left: 200px;
+	width: 50px;
+	height: 100%;
+	padding: 100% 10px 0% 20px;
+}

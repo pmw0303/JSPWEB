@@ -1,0 +1,16 @@
+#addform{
+	font-size: 20px;
+}
+
+.admin_title{
+	margin: 70px 0px;
+	padding : 10px;
+	text-align: cetner;
+	border-bottom: 2px black solid;
+}
+#categorybox input{
+	margin : 5px 20px;
+}
+.row{
+	margin: 30px 0px;
+}
