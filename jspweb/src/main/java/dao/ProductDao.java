@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import dto.Cart;
 import dto.Category;
 import dto.Order;
+import dto.Orderdetail;
 import dto.Product;
 import dto.Stock;
 
@@ -377,15 +378,81 @@ public class ProductDao extends Dao{
 			}catch (Exception e) { System.out.println( e );} return null;
 		}
 		
-		public boolean cancelorder(int orderdetailno, int active) {
+		public boolean cancelorder( int orderdetailno , int active ) {
 			try {
-				String sql = "update porderdetail set orderdetailactive = 3 where orderdetailno = "+orderdetailno;
-				ps = con.prepareStatement(sql);
-				ps.executeUpdate();
-				return true;
-			} catch (Exception e) {
-				System.out.println("cancelorder 오류 : " +e);
-			}return false;
+				String sql = " update porderdetail set orderdetailactive = "+active
+						+ " where orderdetailno = "+orderdetailno;
+				ps = con.prepareStatement(sql); ps.executeUpdate(); return true;
+			}catch (Exception e) { System.out.println( e ); } return false;
 		}
 		
-}
+		public JSONArray getchart( int type  ) {
+			String sql ="";
+			JSONArray ja = new JSONArray();
+			
+			if( type == 1 ) { // 일별 매출 
+				sql ="SELECT "
+					+ "	substring_index( orderdate , ' ' , 1 ) AS 날짜 , "
+					+ "	sum( ordertotalpay ) "
+					+ "FROM porder "
+					+ "GROUP BY 날짜 ORDER BY 날짜 DESC";
+			}else if( type == 2 ) { // 카테고리별 전체 판매량 
+				sql = "select  "
+						+ "	sum( A.samount )  ,  "
+						+ "    D.cname "
+						+ "from porderdetail A, stock B , product C , category D  "
+						+ "where A.sno = B.sno and B.pno = C.pno and C.cno = D.cno  "
+						+ "group by D.cname "
+						+ "order by orderdetailno desc";
+			}
+			try {
+				ps = con.prepareStatement(sql);
+				rs = ps.executeQuery();
+				while( rs.next() ) {
+					JSONObject jo = new JSONObject();
+					if( type == 1 ) {
+						jo.put("date", rs.getString( 1 ) );
+						jo.put("value", rs.getString(2) );
+						ja.put(jo);
+					}else if( type == 2 ) {
+						jo.put("value", rs.getInt( 1 ) );
+						jo.put("category", rs.getString(2) );
+						ja.put(jo);
+					}
+				}
+				return ja;
+			}catch (Exception e) { System.out.println( e );} return null;
+		}
+		
+		
+		// 1. 오늘 주문상세 호출 
+		public ArrayList<Orderdetail> getordertail(){
+			
+			String sql = "select "
+					+ "	A.* , substring_index( B.orderdate , ' ' , 1 ) as 날짜 "
+					+ "from  porderdetail A , porder B "
+					+ "where A.orderno = B.orderno "
+					+ "and substring_index( B.orderdate , ' ' , 1 ) = substring_index( now() , ' ' , 1 ) "
+					+ "and  A.orderdetailactive = 3";
+			try {
+				ps = con.prepareStatement(sql);
+				rs  = ps.executeQuery();
+				ArrayList<Orderdetail> list = new ArrayList<Orderdetail>();
+				while( rs.next() ) {
+					Orderdetail orderdetail = new Orderdetail();
+					orderdetail.setOrderdetailno(  rs.getInt(1) );
+					orderdetail.setOrderdetailactive( rs.getInt(2) );
+					orderdetail.setSamount(rs.getInt(3) );
+					orderdetail.setTotalprice(rs.getInt(4));
+					orderdetail.setOrderno(rs.getInt(5));
+					orderdetail.setSno(rs.getInt(6));
+					
+					list.add(orderdetail);
+				}
+				return list;
+			}catch (Exception e) {} return null;
+			
+		}
+	}
+		
+
