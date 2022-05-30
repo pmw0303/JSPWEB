@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import dto.Cart;
 import dto.Category;
 import dto.Order;
-import dto.Orderdetail;
+import dto.Ordertail;
 import dto.Product;
 import dto.Stock;
 
@@ -386,7 +386,7 @@ public class ProductDao extends Dao{
 			}catch (Exception e) { System.out.println( e ); } return false;
 		}
 		
-		public JSONArray getchart( int type  ) {
+		public JSONArray getchart( int type, int value  ) {
 			String sql ="";
 			JSONArray ja = new JSONArray();
 			
@@ -404,6 +404,13 @@ public class ProductDao extends Dao{
 						+ "where A.sno = B.sno and B.pno = C.pno and C.cno = D.cno  "
 						+ "group by D.cname "
 						+ "order by orderdetailno desc";
+			}else if( type == 3 ) { // 재고번호 -> 제품별 판매량 추이
+				sql = "select "
+						+ "	substring_index(  A.orderdate , ' ' , 1 ) as 날짜, "
+						+ "	sum( B.samount ) as 총판매수량 "
+						+ "from porder A , porderdetail B , stock C "
+						+ "where A.orderno = B.orderno and B.sno = C.sno and C.pno =  ( select pno from stock where sno = "+value+" ) "
+						+ "group by 날짜 order by 날짜 desc";
 			}
 			try {
 				ps = con.prepareStatement(sql);
@@ -424,9 +431,8 @@ public class ProductDao extends Dao{
 			}catch (Exception e) { System.out.println( e );} return null;
 		}
 		
-		
 		// 1. 오늘 주문상세 호출 
-		public ArrayList<Orderdetail> getordertail(){
+		public ArrayList<Ordertail> getordertail(){
 			
 			String sql = "select "
 					+ "	A.* , substring_index( B.orderdate , ' ' , 1 ) as 날짜 "
@@ -437,22 +443,21 @@ public class ProductDao extends Dao{
 			try {
 				ps = con.prepareStatement(sql);
 				rs  = ps.executeQuery();
-				ArrayList<Orderdetail> list = new ArrayList<Orderdetail>();
+				ArrayList<Ordertail> list = new ArrayList<Ordertail>();
 				while( rs.next() ) {
-					Orderdetail orderdetail = new Orderdetail();
-					orderdetail.setOrderdetailno(  rs.getInt(1) );
-					orderdetail.setOrderdetailactive( rs.getInt(2) );
-					orderdetail.setSamount(rs.getInt(3) );
-					orderdetail.setTotalprice(rs.getInt(4));
-					orderdetail.setOrderno(rs.getInt(5));
-					orderdetail.setSno(rs.getInt(6));
+					Ordertail ordertail = new Ordertail();
+					ordertail.setOrderdetailno(  rs.getInt(1)  );
+					ordertail.setOrderdetailactive( rs.getInt(2) );
+					ordertail.setSamount(rs.getInt(3) );
+					ordertail.setTotalprice(rs.getInt(4));
+					ordertail.setOrderno(rs.getInt(5));
+					ordertail.setSno(rs.getInt(6));
 					
-					list.add(orderdetail);
+					list.add(ordertail);
 				}
 				return list;
 			}catch (Exception e) {} return null;
 			
 		}
-	}
 		
-
+}

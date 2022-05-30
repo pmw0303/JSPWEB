@@ -3,7 +3,6 @@ package dao;
 import java.util.ArrayList;
 
 import dto.Board;
-import dto.Chatting;
 import dto.Reply;
 
 public class BoardDao extends Dao {
@@ -197,8 +196,40 @@ public class BoardDao extends Dao {
 		}catch (Exception e) { System.out.println(e); } return null;
 		
 	}
-	// 9. 댓글 수정 메소드 		[ 인수 : 수정할 댓글 번호 ]
-	public boolean replyupdate() { return false; }
+	// 9. 댓글 수정 메소드 [인수 : 수정할 댓글 번호]
+		public boolean replyupdate(int rno, int bno, String content) {
+			try {
+				String sql = "update reply set rcontent = ? where rno = ? and bno = ?";
+				ps = con.prepareStatement(sql);
+				ps.setString(1, content);
+				ps.setInt(2, rno);
+				ps.setInt(3, bno);
+				ps.executeUpdate();
+				return true;
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+			return false;	
+		}
+	// 9-1. 대댓글 수정 메소드 [인수 : 수정할 댓글 번호]
+	public boolean rereplyupdate(int bno, int rno, int rindex, String content) {
+		try {
+			String sql = "update reply set rcontent = ? where rno = ? and rindex = ? and bno = ?";
+			ps = con.prepareStatement(sql);
+			ps.setString(1, content);
+			ps.setInt(2, rno);
+			ps.setInt(3, rindex);
+			ps.setInt(4, bno);
+			ps.executeUpdate();
+			return true;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;	
+	}	
+		
 	// 10. 댓글 삭제 메소드 		[ 인수 : 삭제할 댓글 번호 ] 
 	public boolean replydelete( int rno) { 
 		String sql ="delete from reply "
@@ -212,41 +243,33 @@ public class BoardDao extends Dao {
 	}
 	
 	///////////////////// teamchatting///////////////////
-	public boolean sendmsg(Chatting chat) {
+	public boolean send( String nicname , String content , String ip , String file  )  {
+		String sql = "insert into teamchatting(cnicname , ccontent ,ip,file )values(?,?,?,?)";
 		try {
-			String sql = "insert into chatting (nickname,chatting) values (?,?)";
 			ps = con.prepareStatement(sql);
-			ps.setString(1, chat.getNickname());
-			ps.setString(2, chat.getChatting());
-			ps.executeUpdate();
-			return true;
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		return false;
+			ps.setString( 1 , nicname ); ps.setString( 2 , content );  
+			ps.setString( 3 , ip );		ps.setString( 4 , file );
+			ps.execute(); return true;
+		}catch (Exception e) {} return false;
 	}
-	
-	public String receivemsg(){
+	public String receive(  )  {
+		String receive = "";
+		String sql = "select * from teamchatting;";
 		try {
-			String chatting = null;
-			String sql = "select * from chatting";
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
-			while(rs.next()) {
-				chatting += rs.getString(2)+":"+rs.getString(3)+",";
-				
+			while( rs.next() ) {
+				receive += rs.getString( 6 ) +"^"+
+						rs.getString( 5 ) +"^"+
+						rs.getString( 4 ) +"^"+
+						rs.getString( 2 ) +"^"+
+						rs.getString( 3 )+",";
 			}
-			return chatting;
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+			return receive;
+		}catch (Exception e) {} return null;
 	}
+
 }
-
-
 
 
 

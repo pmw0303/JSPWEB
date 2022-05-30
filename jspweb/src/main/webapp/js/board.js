@@ -84,6 +84,71 @@ function rereplywrite( rno , bno ){ // 대댓글 쓰기 메소드
 	});
 }
 
+function reupdate(rno, bno, content) {
+	// ' ' or " "   밖에서 묶은놈이랑 안에서 묶은놈이랑 다른거 써야함
+	$("#" + rno).html(
+		'<div class="row">' +
+		'<div class="col-md-10">' +
+		'<input class="form-control my-1" type="text" id="rrcontent" value="' + content + '">' +
+		'</div>' +
+		'<div class="col-md-2">' +
+		'<button class="btn btn-sm btn-outline-dark my-1" onclick="replyupdate(' + rno + ',' + bno + ')">수정</button>' +
+		'</div>' +
+		'</div>'
+	);
+}
+
+function replyupdate(rno, bno) {
+	let content = $("#rrcontent").val();
+	$.ajax({
+		url: "../board/replyupdate",
+		data: { "rno": rno, "bno": bno, "content": content },
+		success: function(result) {
+			if (result == 1) {
+				alert("댓글수정 되었습니다.");
+				$("#replytable").load(location.href + " #replytable");
+				/* 해당태그의 불러오기 = 현재  */
+			}
+			else {
+				alert("댓글수정 실패했습니다.");
+			}
+		}
+	});
+}
+
+function rereupdate(rno, bno, rindex, content) {
+	alert(rno);
+	// ' ' or " "   밖에서 묶은놈이랑 안에서 묶은놈이랑 다른거 써야함
+	$("#" + rno).html(
+		'<div class="row">' +
+		'<div class="col-md-10">' +
+		'<input class="form-control my-1" type="text" id="rrrcontent" value="' + content + '">' +
+		'</div>' +
+		'<div class="col-md-2">' +
+		'<button class="btn btn-sm btn-outline-dark my-1" onclick="rereplyupdate(' + rno + ',' + bno + ',' + rindex + ')">수정</button>' +
+		'</div>' +
+		'</div>'
+	);
+}
+
+function rereplyupdate(rno, bno, rindex) {
+	let content = $("#rrrcontent").val();
+	$.ajax({
+		url: "../board/rereplyupdate",
+		data: { "rno": rno, "bno": bno, "rindex": rindex, "content": content },
+		success: function(result) {
+			if (result == 1) {
+				alert("대댓수정 되었습니다.");
+				$("#replytable").load(location.href + " #replytable");
+				/* 해당태그의 불러오기 = 현재  */
+			}
+			else {
+				alert("대댓글수정 실패했습니다.");
+			}
+		}
+	});
+}
+
 function replydelete( rno ){
 	$.ajax({
 		url : "replydelete" , 

@@ -1,19 +1,19 @@
 package dto;
 
-public class Orderdetail {
-
-	private int orderdetailno;
+public class Ordertail {
+	
+	private int orderdetailno ;
 	private int orderdetailactive;
-	private int samount;
+	private int samount ;
 	private int totalprice;
 	private int orderno;
-	private int sno;
-
-	public Orderdetail() {
-		
+	private int sno ;
+	
+	public Ordertail() {
+		// TODO Auto-generated constructor stub
 	}
 
-	public Orderdetail(int orderdetailno, int orderdetailactive, int samount, int totalprice, int orderno, int sno) {
+	public Ordertail(int orderdetailno, int orderdetailactive, int samount, int totalprice, int orderno, int sno) {
 		super();
 		this.orderdetailno = orderdetailno;
 		this.orderdetailactive = orderdetailactive;
@@ -70,5 +70,12 @@ public class Orderdetail {
 	public void setSno(int sno) {
 		this.sno = sno;
 	}
+
+	@Override
+	public String toString() {
+		return "Ordertail [orderdetailno=" + orderdetailno + ", orderdetailactive=" + orderdetailactive + ", samount="
+				+ samount + ", totalprice=" + totalprice + ", orderno=" + orderno + ", sno=" + sno + "]";
+	}
+	
 
 }

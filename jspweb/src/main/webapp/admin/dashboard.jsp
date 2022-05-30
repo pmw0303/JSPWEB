@@ -14,7 +14,7 @@
 <body>
 	<%
       if(session.getAttribute("login")==null || !(session.getAttribute("login").equals("admin"))){
-         response.sendRedirect("/KYJ_JSPWEB_study/error.jsp");
+         response.sendRedirect("/jspweb/error.jsp");
       }
    %>
 	<marquee scrollamount="10">관리자</marquee>

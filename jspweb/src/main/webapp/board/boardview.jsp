@@ -101,7 +101,7 @@
 				<td width="80%" colspan="2">
 					<%=reply.getRcontent() %> <br> 
 				<% if( mid !=null && mid.equals( reply.getMid() ) ){ // 본인 작성한 댓글이면 %>
-					<button class="btn replybtn"> 수정 </button>
+					<button type="button" class="btn replybtn" onclick="reupdate(<%=reply.getRno()%>, <%=reply.getBno()%>,'<%=reply.getRcontent()%>')"> 수정 </button>
 					<button type="button" class="btn replybtn" onclick="replydelete(<%=reply.getRno()%>)"> 삭제 </button>
 				<%} %>
 					<button class="btn replybtn" 
@@ -129,10 +129,15 @@
 					<td width="80%">
 						<%=rereply.getRcontent() %> <br> 
 					<% if( mid != null && mid.equals( rereply.getMid() ) ){ %>
-						<button class="btn replybtn"> 수정 </button>
+						<button class="btn replybtn" onclick="rereupdate(<%=rereply.getRno()%>,<%=rereply.getBno()%>,<%=rereply.getRindex()%>,'<%=rereply.getRcontent()%>')">수정</button> 
 						<button class="btn replybtn" onclick="replydelete(<%=rereply.getRno()%>)"> 삭제 </button>
 					<%} %>
 					</td>
+				</tr>
+				
+				<tr> <!-- 대댓글 입력창 -->
+					<td> </td>
+					<td colspan="2" id=<%=rereply.getRno() %> > </td>   <!-- 해당 태그의 id값을 변수로 설정 = 댓글번호 ( 댓글 한개당 1개씩 ) -->
 				</tr>
 				
 			<%  }  } %>

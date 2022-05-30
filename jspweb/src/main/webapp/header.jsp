@@ -103,7 +103,7 @@
 					</li>
 					<li class="nav-item"><a class="blinking" href="/jspweb/game.jsp">GAMES</a></li>
 					<li class="nav-item"><a href="/jspweb/teamchatting.jsp">LIVE CHAT</a></li>
-					<li class="nav-item"><a class="blinking" href="#" style="color: #FFBB00;">LIKE MODEL</a></li>
+					<li class="nav-item"><a class="blinking" href="/jspweb/board/chatting.jsp" style="color: #FFBB00;">COCONUT TALK</a></li>
 					<li class="nav-item"><a class="blinking" href="#" style="color: #FF0000;">50% D/C</a></li>
 					<li class="nav-item"> <input type="text" class="header_input" size="13"> </li>
 					<li class="nav-item"> <a href="#"> <i class="fas fa-search"></i> </a> </li>	

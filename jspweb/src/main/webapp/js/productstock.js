@@ -61,7 +61,12 @@ function getstock(){
 		url : 'getstock' ,
 		data : { "pno" : pno } ,
 		success : function( re ){
-			$("#stocklistbox").html(re);
+			if(re==""){
+				$("#stocklistbox").html("재고가 없습니다.");			
+			}
+			else{
+				$("#stocklistbox").html(re);			
+			}
 		}
 	});
 }
